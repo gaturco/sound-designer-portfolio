@@ -3,14 +3,12 @@
 .github
 .env.local
 .env.*.local
-node_modules
 *.test.ts
 *.test.tsx
 vitest.config.ts
 vite.config.ts.bak
 todo.md
 README.md
-client/
 server/
 shared/
 drizzle/
