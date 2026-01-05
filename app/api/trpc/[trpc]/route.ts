@@ -1,6 +1,14 @@
 import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
 import { appRouter } from "@server/routers";
-import { createContext } from "@server/_core/context";
+import type { TrpcContext } from "@server/_core/context";
+
+async function createContext(): Promise<TrpcContext> {
+  return {
+    req: {} as any,
+    res: {} as any,
+    user: null,
+  };
+}
 
 const handler = (req: Request) =>
   fetchRequestHandler({
