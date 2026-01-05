@@ -1,5 +1,6 @@
 import { eq, desc } from "drizzle-orm";
-import { drizzle } from "drizzle-orm/mysql2";
+import { drizzle } from "drizzle-orm/postgres-js";
+import postgres from "postgres";
 import { InsertUser, users, projects, siteContent, type Project, type InsertProject, type SiteContent, type InsertSiteContent } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
@@ -9,7 +10,8 @@ let _db: ReturnType<typeof drizzle> | null = null;
 export async function getDb() {
   if (!_db && process.env.DATABASE_URL) {
     try {
-      _db = drizzle(process.env.DATABASE_URL);
+      const client = postgres(process.env.DATABASE_URL);
+      _db = drizzle(client);
     } catch (error) {
       console.warn("[Database] Failed to connect:", error);
       _db = null;
@@ -68,7 +70,9 @@ export async function upsertUser(user: InsertUser): Promise<void> {
       updateSet.lastSignedIn = new Date();
     }
 
-    await db.insert(users).values(values).onDuplicateKeyUpdate({
+    // For PostgreSQL, use onConflict instead of onDuplicateKeyUpdate
+    await db.insert(users).values(values).onConflictDoUpdate({
+      target: users.openId,
       set: updateSet,
     });
   } catch (error) {
@@ -107,11 +111,9 @@ export async function createProject(data: InsertProject): Promise<Project | null
   const db = await getDb();
   if (!db) return null;
   try {
-    const result = await db.insert(projects).values(data);
-    const id = (result as any).insertId || (result as any)[0]?.id;
-    if (!id) return null;
-    const project = await getProjectById(id);
-    return project || null;
+    const result = await db.insert(projects).values(data).returning();
+    if (result.length === 0) return null;
+    return result[0] || null;
   } catch (error) {
     console.error('[Database] Failed to create project:', error);
     return null;
