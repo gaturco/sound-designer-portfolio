@@ -1,5 +1,5 @@
 {
-  "buildCommand": "npm run build",
+  "buildCommand": "tsx build.ts",
   "installCommand": "pnpm install",
   "env": {
     "NODE_ENV": "production"
