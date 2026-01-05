@@ -75,8 +75,10 @@
 
 
 ## Sprint 6 - Deploy e Configuração
-- [ ] Criar repositório GitHub (gaturco/sound-designer-portfolio)
-- [ ] Fazer primeiro commit do projeto
-- [ ] Configurar Vercel para deploy automático
+- [x] Criar repositório GitHub (gaturco/sound-designer-portfolio)
+- [x] Fazer primeiro commit do projeto
+- [x] Converter de MySQL para PostgreSQL
+- [x] Executar migrações no Neon.tech
+- [x] Configurar Vercel para deploy automático
+- [ ] Corrigir resposta do servidor na Vercel
 - [ ] Conectar domínio gabrielturco.com.br
-- [ ] Fazer deploy inicial
