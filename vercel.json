@@ -1,7 +1,8 @@
 {
-  "buildCommand": "tsx build.ts",
+  "buildCommand": "pnpm build",
   "installCommand": "pnpm install",
   "env": {
     "NODE_ENV": "production"
-  }
+  },
+  "public": false
 }

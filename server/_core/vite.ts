@@ -46,20 +46,30 @@ export async function setupVite(app: Express, server: Server) {
 }
 
 export function serveStatic(app: Express) {
-  // Find the dist/public directory
-  // When running from dist/server/_core, we need to go up 2 levels
-  // When running from source, we also go up to root then into dist/public
-  const rootDir = process.cwd();
-  const distPath = path.join(rootDir, "dist", "public");
-  
+  // Try multiple possible paths
+  const possiblePaths = [
+    path.join(process.cwd(), "dist", "public"),
+    path.join(__dirname, "..", "..", "dist", "public"),
+  ];
+
+  let distPath = "";
+  for (const p of possiblePaths) {
+    if (fs.existsSync(p)) {
+      distPath = p;
+      break;
+    }
+  }
+
+  if (!distPath) {
+    console.error(
+      `Could not find the build directory. Tried: ${possiblePaths.join(", ")}`
+    );
+    // Fallback - just try the first one anyway
+    distPath = possiblePaths[0];
+  }
+
   console.log(`Serving static files from: ${distPath}`);
   console.log(`Directory exists: ${fs.existsSync(distPath)}`);
-  
-  if (!fs.existsSync(distPath)) {
-    console.error(
-      `Could not find the build directory: ${distPath}, make sure to build the client first`
-    );
-  }
 
   // Serve static assets with proper caching
   app.use(express.static(distPath, {
