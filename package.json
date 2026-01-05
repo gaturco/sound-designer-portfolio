@@ -5,8 +5,8 @@
   "license": "MIT",
   "scripts": {
     "dev": "cross-env NODE_ENV=development tsx watch server/_core/index.ts",
-    "build": "vite build && esbuild server/_core/index.ts --platform=node --external:@aws-sdk --external:@trpc --external:@tailwindcss --external:@vitejs --external:@builder.io --external:@radix-ui --external:@tanstack --external:@hookform --external:@types --external:drizzle-orm --external:express --external:vite --external:axios --external:cookie --external:jose --external:zod --external:superjson --external:postgres --external:mysql2 --bundle --format=esm --outdir=dist",
-    "start": "cross-env NODE_ENV=production node dist/index.js",
+    "build": "tsx build.ts",
+    "start": "cross-env NODE_ENV=production node dist/server/_core/index.js",
     "check": "tsc --noEmit",
     "format": "prettier --write .",
     "test": "vitest run",

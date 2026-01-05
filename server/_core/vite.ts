@@ -46,7 +46,17 @@ export async function setupVite(app: Express, server: Server) {
 }
 
 export function serveStatic(app: Express) {
-  const distPath = path.join(__dirname, "../..", "dist", "public");
+  // In production, dist/public contains the built frontend
+  // In development, this shouldn't be called
+  let distPath: string;
+  
+  // Check if we're running from dist directory (production)
+  if (__dirname.includes("dist")) {
+    distPath = path.join(__dirname, "..", "..", "dist", "public");
+  } else {
+    // Running from source
+    distPath = path.join(__dirname, "..", "..", "dist", "public");
+  }
   
   if (!fs.existsSync(distPath)) {
     console.error(
