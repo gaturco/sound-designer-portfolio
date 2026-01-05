@@ -54,22 +54,31 @@ export function serveStatic(app: Express) {
 
   let distPath = "";
   for (const p of possiblePaths) {
+    console.log(`Checking path: ${p}`);
     if (fs.existsSync(p)) {
+      console.log(`✅ Found dist at: ${p}`);
       distPath = p;
       break;
+    } else {
+      console.log(`❌ Not found: ${p}`);
     }
   }
 
   if (!distPath) {
     console.error(
-      `Could not find the build directory. Tried: ${possiblePaths.join(", ")}`
+      `Could not find dist/public in any location. Tried: ${possiblePaths.join(", ")}`
     );
-    // Fallback - just try the first one anyway
+    // Fallback
     distPath = possiblePaths[0];
   }
 
-  console.log(`Serving static files from: ${distPath}`);
-  console.log(`Directory exists: ${fs.existsSync(distPath)}`);
+  console.log(`📁 Serving static files from: ${distPath}`);
+  console.log(`   Directory exists: ${fs.existsSync(distPath)}`);
+  
+  if (fs.existsSync(distPath)) {
+    const files = fs.readdirSync(distPath);
+    console.log(`   Files in directory: ${files.slice(0, 5).join(", ")}...`);
+  }
 
   // Serve static assets with proper caching
   app.use(express.static(distPath, {
@@ -88,15 +97,16 @@ export function serveStatic(app: Express) {
   // Fallback to index.html for SPA routing
   app.use("*", (req, res) => {
     const indexPath = path.resolve(distPath, "index.html");
-    console.log(`Checking for index.html at: ${indexPath}`);
-    console.log(`Exists: ${fs.existsSync(indexPath)}`);
+    console.log(`📍 Request to: ${req.originalUrl}`);
+    console.log(`   Looking for index.html at: ${indexPath}`);
+    console.log(`   Exists: ${fs.existsSync(indexPath)}`);
     if (fs.existsSync(indexPath)) {
       res.setHeader("Content-Type", "text/html; charset=utf-8");
       res.setHeader("Cache-Control", "public, max-age=0, must-revalidate");
       res.sendFile(indexPath);
     } else {
-      console.error(`index.html not found at ${indexPath}`);
-      res.status(404).send("Not Found");
+      console.error(`❌ index.html not found at ${indexPath}`);
+      res.status(404).send("Not Found - index.html not found");
     }
   });
 }

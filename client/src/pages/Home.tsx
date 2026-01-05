@@ -7,9 +7,12 @@ import Footer from '@/components/Footer';
 import { trpc } from '@/lib/trpc';
 
 export default function Home() {
-  const { data: projects = [] } = trpc.projects.list.useQuery();
+  const { data: projects } = trpc.projects.list.useQuery();
   const { data: aboutData } = trpc.content.getAbout.useQuery();
-  const { data: contactLinks = [] } = trpc.content.getContactLinks.useQuery();
+  const { data: contactLinks } = trpc.content.getContactLinks.useQuery();
+
+  const projectsList = Array.isArray(projects) ? projects : [];
+  const contactLinksList = Array.isArray(contactLinks) ? contactLinks : [];
 
   // Default values if data is not loaded
   const heroData = {
@@ -33,8 +36,8 @@ export default function Home() {
         bio={aboutData?.bio || 'Bem-vindo ao meu portfólio de Sound Design. Aqui você encontrará meus projetos mais recentes e informações sobre meu trabalho.'}
         metrics={metrics}
       />
-      <Projects projects={projects as ProjectCard[]} />
-      <Contact links={contactLinks as ContactLink[]} />
+      <Projects projects={projectsList as ProjectCard[]} />
+      <Contact links={contactLinksList as ContactLink[]} />
       <Footer />
     </div>
   );
