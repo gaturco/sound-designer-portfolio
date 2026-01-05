@@ -1,7 +1,6 @@
 {
   "buildCommand": "npm run build",
   "installCommand": "pnpm install",
-  "startCommand": "npm run start",
   "env": {
     "NODE_ENV": "production"
   }
