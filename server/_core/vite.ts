@@ -5,7 +5,7 @@ import path from "path";
 import { createServer as createViteServer } from "vite";
 import viteConfig from "../../vite.config";
 
-export async function setupVite(app: Express, server: Server ) {
+export async function setupVite(app: Express, server: Server) {
   const serverOptions = {
     middlewareMode: true,
     hmr: { server },
@@ -50,11 +50,16 @@ export function serveStatic(app: Express) {
     );
   }
 
-  // Serve static files with proper MIME types
+  // Serve static assets with proper caching
   app.use(express.static(distPath, {
+    maxAge: "1d",
+    etag: false,
     setHeaders: (res, path) => {
-      if (path.endsWith('.html')) {
-        res.setHeader('Content-Type', 'text/html; charset=utf-8');
+      if (path.endsWith(".html")) {
+        res.setHeader("Content-Type", "text/html; charset=utf-8");
+        res.setHeader("Cache-Control", "public, max-age=0, must-revalidate");
+      } else if (path.match(/\.(js|css)$/)) {
+        res.setHeader("Cache-Control", "public, max-age=31536000, immutable");
       }
     }
   }));
@@ -62,7 +67,12 @@ export function serveStatic(app: Express) {
   // Fallback to index.html for SPA routing
   app.use("*", (req, res) => {
     const indexPath = path.resolve(distPath, "index.html");
-    res.setHeader("Content-Type", "text/html; charset=utf-8");
-    res.sendFile(indexPath);
+    if (fs.existsSync(indexPath)) {
+      res.setHeader("Content-Type", "text/html; charset=utf-8");
+      res.setHeader("Cache-Control", "public, max-age=0, must-revalidate");
+      res.sendFile(indexPath);
+    } else {
+      res.status(404).send("Not Found");
+    }
   });
 }
