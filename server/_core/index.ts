@@ -8,6 +8,10 @@ import { appRouter } from "../routers";
 import { createContext } from "./context";
 import { serveStatic, setupVite } from "./vite";
 
+console.log("🚀 Server starting...");
+console.log("NODE_ENV:", process.env.NODE_ENV);
+console.log("Current directory:", process.cwd());
+
 function isPortAvailable(port: number): Promise<boolean> {
   return new Promise(resolve => {
     const server = net.createServer();
@@ -45,8 +49,10 @@ async function startServer() {
   );
   // development mode uses Vite, production mode uses static files
   if (process.env.NODE_ENV === "development") {
+    console.log("📦 Using Vite dev server");
     await setupVite(app, server);
   } else {
+    console.log("📁 Serving static files");
     serveStatic(app);
   }
 
@@ -54,12 +60,15 @@ async function startServer() {
   const port = process.env.VERCEL ? preferredPort : await findAvailablePort(preferredPort);
 
   if (port !== preferredPort) {
-    console.log(`Port ${preferredPort} is busy, using port ${port} instead`);
+    console.log(`⚠️  Port ${preferredPort} is busy, using port ${port} instead`);
   }
 
   server.listen(port, "0.0.0.0", () => {
-    console.log(`Server running on http://localhost:${port}/`);
+    console.log(`✅ Server running on http://localhost:${port}/`);
   });
 }
 
-startServer().catch(console.error);
+startServer().catch(err => {
+  console.error("❌ Failed to start server:", err);
+  process.exit(1);
+});
