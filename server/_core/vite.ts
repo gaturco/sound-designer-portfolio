@@ -46,17 +46,14 @@ export async function setupVite(app: Express, server: Server) {
 }
 
 export function serveStatic(app: Express) {
-  // In production, dist/public contains the built frontend
-  // In development, this shouldn't be called
-  let distPath: string;
+  // Find the dist/public directory
+  // When running from dist/server/_core, we need to go up 2 levels
+  // When running from source, we also go up to root then into dist/public
+  const rootDir = process.cwd();
+  const distPath = path.join(rootDir, "dist", "public");
   
-  // Check if we're running from dist directory (production)
-  if (__dirname.includes("dist")) {
-    distPath = path.join(__dirname, "..", "..", "dist", "public");
-  } else {
-    // Running from source
-    distPath = path.join(__dirname, "..", "..", "dist", "public");
-  }
+  console.log(`Serving static files from: ${distPath}`);
+  console.log(`Directory exists: ${fs.existsSync(distPath)}`);
   
   if (!fs.existsSync(distPath)) {
     console.error(
@@ -81,11 +78,14 @@ export function serveStatic(app: Express) {
   // Fallback to index.html for SPA routing
   app.use("*", (req, res) => {
     const indexPath = path.resolve(distPath, "index.html");
+    console.log(`Checking for index.html at: ${indexPath}`);
+    console.log(`Exists: ${fs.existsSync(indexPath)}`);
     if (fs.existsSync(indexPath)) {
       res.setHeader("Content-Type", "text/html; charset=utf-8");
       res.setHeader("Cache-Control", "public, max-age=0, must-revalidate");
       res.sendFile(indexPath);
     } else {
+      console.error(`index.html not found at ${indexPath}`);
       res.status(404).send("Not Found");
     }
   });
