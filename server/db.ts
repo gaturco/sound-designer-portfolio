@@ -109,14 +109,16 @@ export async function getProjectById(id: number): Promise<Project | undefined> {
 
 export async function createProject(data: InsertProject): Promise<Project | null> {
   const db = await getDb();
-  if (!db) return null;
+  if (!db) {
+    throw new Error("Database not available");
+  }
   try {
     const result = await db.insert(projects).values(data).returning();
     if (result.length === 0) return null;
     return result[0] || null;
   } catch (error) {
     console.error('[Database] Failed to create project:', error);
-    return null;
+    throw new Error(`Failed to create project: ${error instanceof Error ? error.message : 'Unknown error'}`);
   }
 }
 

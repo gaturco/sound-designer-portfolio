@@ -8,11 +8,21 @@ import { trpc } from "@/lib/trpc";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 
 export function Providers({ children }: { children: ReactNode }) {
-  const [queryClient] = useMemo(() => [new QueryClient()], []);
+  const [queryClient] = useMemo(
+    () => [
+      new QueryClient({
+        defaultOptions: {
+          queries: {
+            retry: 1,
+          },
+        },
+      }),
+    ],
+    []
+  );
   const [trpcClient] = useMemo(
     () => [
       trpc.createClient({
-        transformer: superjson,
         links: [
           httpBatchLink({
             url: `${getBaseUrl()}/api/trpc`,
@@ -20,6 +30,9 @@ export function Providers({ children }: { children: ReactNode }) {
               return fetch(url, {
                 ...options,
                 credentials: "include",
+              }).then(res => {
+                console.log('tRPC Response:', res.status);
+                return res;
               });
             },
           }),

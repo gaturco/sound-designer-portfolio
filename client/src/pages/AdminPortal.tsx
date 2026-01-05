@@ -1,20 +1,34 @@
-import { useAuth } from '@/_core/hooks/useAuth';
 import { Button } from '@/components/ui/button';
-import { getLoginUrl } from '@/const';
-import { useLocation } from 'wouter';
-import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { useState, useEffect } from 'react';
 import { trpc } from '@/lib/trpc';
 import { Trash2, Plus, Edit2 } from 'lucide-react';
 import { toast } from 'sonner';
 
 export default function AdminPortal() {
-  const { user, loading, isAuthenticated, logout } = useAuth();
-  const [, setLocation] = useLocation();
+  console.log('AdminPortal component mounted');
+  const router = useRouter();
   const [activeTab, setActiveTab] = useState<'projects' | 'content' | 'social'>('projects');
   const [showForm, setShowForm] = useState(false);
 
+  const handleLogout = () => {
+    // Clear the authentication cookie
+    document.cookie = 'admin_authenticated=; path=/; max-age=0';
+    router.push('/admin-auth');
+  };
+
   // Projects
-  const { data: projects = [], refetch: refetchProjects } = trpc.projects.list.useQuery();
+  const projectsQuery = trpc.projects.list.useQuery();
+  
+  console.log('Projects Query State:', { status: projectsQuery.status, data: projectsQuery.data, error: projectsQuery.error });
+  
+  const { data: projects, refetch: refetchProjects, error: projectsError } = projectsQuery;
+  
+  if (projectsError) {
+    console.error('Projects error:', projectsError);
+  }
+  
+  const projectsList = Array.isArray(projects) ? projects : [];
   const createProjectMutation = trpc.projects.create.useMutation({
     onSuccess: () => {
       refetchProjects();
@@ -36,7 +50,14 @@ export default function AdminPortal() {
   });
 
   // Content
-  const { data: aboutData } = trpc.content.getAbout.useQuery();
+  const aboutQuery = trpc.content.getAbout.useQuery();
+  
+  const { data: aboutData, error: aboutError } = aboutQuery;
+  
+  if (aboutError) {
+    console.error('About error:', aboutError);
+  }
+  
   const updateAboutMutation = trpc.content.updateAbout.useMutation({
     onSuccess: () => {
       toast.success('Conteúdo atualizado com sucesso!');
@@ -46,35 +67,7 @@ export default function AdminPortal() {
     },
   });
 
-  // Note: Removed automatic redirect to home
-  // Users will see the login page instead
-
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-muted-foreground">Carregando...</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (!isAuthenticated) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-background px-4">
-        <div className="text-center max-w-md">
-          <h1 className="text-3xl font-bold mb-4 text-foreground">Acesso Restrito</h1>
-          <p className="text-muted-foreground mb-6">
-            Você precisa estar autenticado para acessar o painel administrativo.
-          </p>
-          <a href={getLoginUrl()}>
-            <Button className="w-full">Fazer Login</Button>
-          </a>
-        </div>
-      </div>
-    );
-  }
+  // Note: Authentication is handled by middleware - if we reach here, user is authenticated
 
   const handleCreateProject = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -116,7 +109,7 @@ export default function AdminPortal() {
         {/* Header */}
         <div className="flex justify-between items-center mb-12">
           <h1 className="text-4xl font-bold text-foreground">Painel Administrativo</h1>
-          <Button onClick={logout} variant="outline">
+          <Button onClick={handleLogout} variant="outline">
             Sair
           </Button>
         </div>
@@ -124,7 +117,7 @@ export default function AdminPortal() {
         {/* Welcome Message */}
         <div className="bg-blue-50 dark:bg-blue-950 border border-blue-200 dark:border-blue-800 rounded-lg p-6 mb-8">
           <p className="text-blue-900 dark:text-blue-100">
-            Bem-vindo, <strong>{user?.name || 'Administrador'}</strong>!
+            Bem-vindo, <strong>Administrador</strong>!
           </p>
         </div>
 
@@ -225,10 +218,10 @@ export default function AdminPortal() {
 
             {/* Projects List */}
             <div className="space-y-4">
-              {projects.length === 0 ? (
+              {(!projectsList || projectsList.length === 0) ? (
                 <p className="text-muted-foreground text-center py-8">Nenhum projeto cadastrado.</p>
               ) : (
-                projects.map((project: any) => (
+                projectsList.map((project: any) => (
                   <div key={project.id} className="bg-card rounded-lg p-6 border border-border flex justify-between items-start">
                     <div className="flex-grow">
                       <h3 className="text-lg font-bold text-foreground">{project.title}</h3>

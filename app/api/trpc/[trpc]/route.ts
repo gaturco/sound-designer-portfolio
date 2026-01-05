@@ -2,11 +2,15 @@ import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
 import { appRouter } from "@server/routers";
 import type { TrpcContext } from "@server/_core/context";
 
-async function createContext(): Promise<TrpcContext> {
+async function createContext(req: Request): Promise<TrpcContext> {
+  // Check if user is authenticated via admin cookie
+  const cookieHeader = req.headers.get("cookie") || "";
+  const isAuthenticated = cookieHeader.includes("admin_authenticated=true");
+  
   return {
     req: {} as any,
     res: {} as any,
-    user: null,
+    user: isAuthenticated ? { id: "admin", name: "Admin" } : null,
   };
 }
 
@@ -15,7 +19,7 @@ const handler = (req: Request) =>
     endpoint: "/api/trpc",
     req,
     router: appRouter,
-    createContext,
+    createContext: () => createContext(req),
   });
 
 export { handler as GET, handler as POST };

@@ -24,13 +24,14 @@ export const appRouter = router({
     }),
     create: protectedProcedure
       .input(z.object({
-        title: z.string(),
-        description: z.string().optional(),
+        title: z.string().min(1),
+        description: z.string().optional().default(''),
         link: z.string().url(),
-        type: z.string(),
-        tags: z.string().optional(),
-      }))
+        type: z.string().min(1),
+        tags: z.string().optional().default(''),
+      }).passthrough()) // Allow extra fields
       .mutation(async ({ input }) => {
+        console.log('Creating project with input:', JSON.stringify(input, null, 2));
         return createProject(input);
       }),
     update: protectedProcedure
