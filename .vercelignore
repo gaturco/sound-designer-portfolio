@@ -9,5 +9,3 @@ vitest.config.ts
 vite.config.ts.bak
 todo.md
 README.md
-server/
-drizzle/
