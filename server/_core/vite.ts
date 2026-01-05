@@ -6,7 +6,8 @@ import { fileURLToPath } from "node:url";
 import { createServer as createViteServer } from "vite";
 import viteConfig from "../../vite.config";
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 export async function setupVite(app: Express, server: Server) {
   const serverOptions = {
@@ -27,7 +28,7 @@ export async function setupVite(app: Express, server: Server) {
     const url = req.originalUrl;
 
     try {
-      const clientTemplate = path.resolve(
+      const clientTemplate = path.join(
         __dirname,
         "../..",
         "client",
@@ -45,7 +46,7 @@ export async function setupVite(app: Express, server: Server) {
 }
 
 export function serveStatic(app: Express) {
-  const distPath = path.resolve(__dirname, "../..", "dist", "public");
+  const distPath = path.join(__dirname, "../..", "dist", "public");
   
   if (!fs.existsSync(distPath)) {
     console.error(
