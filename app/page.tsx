@@ -1,9 +1,19 @@
-"use client";
+import Header from './components/Header';
+import Hero from './components/Hero';
+import Projects from './components/Projects';
+import Specialties from './components/Specialties';
+import Contact from './components/Contact';
+import Footer from './components/Footer';
 
-import dynamic from "next/dynamic";
-
-const Home = dynamic(() => import("@/pages/Home"), { ssr: false });
-
-export default function HomePage() {
-  return <Home />;
+export default function Home() {
+  return (
+    <div className="bg-primary text-cream">
+      <Header />
+      <Hero />
+      <Projects />
+      <Specialties />
+      <Contact />
+      <Footer />
+    </div>
+  );
 }
