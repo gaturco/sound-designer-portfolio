@@ -51,20 +51,20 @@ export default function Specialties() {
   return (
     <section className="py-20 bg-primary px-4">
       <div className="max-w-7xl mx-auto">
-        <h2 className="text-4xl md:text-5xl font-bold text-center mb-4 text-cream">Especialidades</h2>
+        <h2 className="text-2xl md:text-4xl lg:text-5xl font-bold text-center mb-4 text-cream">Especialidades</h2>
         <p className="text-center text-cream/70 mb-12 max-w-2xl mx-auto">
           Áreas de atuação e expertise
         </p>
 
-        <div className="flex justify-center">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl justify-items-center">
+        <div className="flex justify-center w-full">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 w-full max-w-5xl">
           {specialties.map(specialty => {
             const IconComponent = specialty.icon ? iconMap[specialty.icon] : Music;
             
             return (
               <div
                 key={specialty.id}
-                className="bg-secondary p-6 rounded-lg border border-accent/20 text-center hover:border-accent/50 transition"
+                className="bg-secondary p-6 rounded-lg border border-accent/20 text-center hover:border-accent/50 transition w-full"
               >
                 <div className="mb-4 flex justify-center">
                   <div className="w-16 h-16 bg-accent/10 rounded-full flex items-center justify-center">

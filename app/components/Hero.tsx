@@ -34,10 +34,10 @@ export default function Hero() {
   return (
     <section id="sobre" className="min-h-screen flex items-center justify-center bg-primary px-4">
       <div className="max-w-6xl mx-auto w-full">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-12 items-center">
           {/* Foto - à esquerda no desktop, em cima no mobile */}
           <div className="order-1 md:order-1 flex justify-center">
-            <div className="w-80 h-80 md:w-[28rem] md:h-[28rem]">
+            <div className="w-56 h-56 md:w-[28rem] md:h-[28rem]">
               <img 
                 src="/profile.jpg" 
                 alt="Gabriel Turco Profile" 
@@ -62,7 +62,7 @@ export default function Hero() {
 
             <div className="flex items-center justify-center md:justify-start gap-4 flex-wrap">
               <a href="#projetos" className="inline-block px-8 py-3 bg-accent text-primary rounded-lg hover:bg-orange transition font-semibold">
-                Ver Portfólio
+                Ver Projetos
               </a>
               
               <div className="flex gap-3">
