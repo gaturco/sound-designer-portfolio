@@ -91,7 +91,7 @@ export default function AdminPortal() {
           <h1 className="text-2xl font-bold text-cream">Admin Portal</h1>
           <button
             onClick={handleLogout}
-            className="px-4 py-2 bg-brown text-cream rounded-lg hover:bg-brown/80 transition"
+            className="px-4 py-2 bg-accent text-primary rounded-lg hover:bg-orange transition font-medium cursor-pointer"
           >
             Sair
           </button>

@@ -48,7 +48,7 @@ export default function Projects() {
                 href={project.link}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group bg-primary rounded-lg overflow-hidden hover:shadow-lg transition border border-accent/20"
+                className="group bg-primary rounded-lg overflow-hidden hover:shadow-lg transition border border-accent/20 flex flex-col h-full"
               >
                 <div className={`h-48 flex items-center justify-center group-hover:scale-105 transition ${project.thumbnail ? 'overflow-hidden' : 'bg-cream'}`}>
                   {project.thumbnail ? (
@@ -61,19 +61,17 @@ export default function Projects() {
                     <span className="text-6xl">🎵</span>
                   )}
                 </div>
-                <div className="p-6">
+                <div className="p-6 flex flex-col h-full">
                   <h3 className="text-xl font-bold mb-2 text-cream group-hover:text-accent transition">
                     {project.title}
                   </h3>
-                  <p className="text-cream/70 text-sm mb-4">
+                  <p className="text-cream/70 text-sm mb-4 flex-grow">
                     {project.description}
                   </p>
-                  <div className="flex items-center justify-between">
-                    <div className="flex gap-2">
-                      <span className="text-xs bg-brown text-cream px-2 py-1 rounded">
-                        {project.type}
-                      </span>
-                    </div>
+                  <div className="flex items-end justify-between mt-auto pt-4 border-t border-accent/10">
+                    <span className="text-xs bg-brown text-cream px-2 py-1 rounded">
+                      {project.type}
+                    </span>
                     <ExternalLink size={16} className="text-accent" />
                   </div>
                 </div>

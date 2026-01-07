@@ -1,0 +1,32 @@
+<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      @font-face {
+        font-family: 'Lulo Clean';
+        src: url('/fonts/lulo-clean/Lulo Clean One Bold.otf') format('opentype');
+      }
+      .favicon-text {
+        font-family: 'Lulo Clean', Arial, sans-serif;
+        font-size: 32px;
+        font-weight: 900;
+        fill: #EBE7D9;
+        dominant-baseline: middle;
+        text-anchor: middle;
+      }
+    </style>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="64" height="64" fill="#1E1F22" rx="8"/>
+  
+  <!-- Sound waves (simplified for favicon) -->
+  <g fill="#EBE7D9">
+    <rect x="4" y="16" width="2.5" height="16" rx="1.25"/>
+    <rect x="8" y="12" width="2.5" height="24" rx="1.25"/>
+    <rect x="12" y="8" width="2.5" height="32" rx="1.25"/>
+    <rect x="16" y="14" width="2.5" height="20" rx="1.25"/>
+  </g>
+  
+  <!-- GT Text -->
+  <text class="favicon-text" x="40" y="32">GT</text>
+</svg>

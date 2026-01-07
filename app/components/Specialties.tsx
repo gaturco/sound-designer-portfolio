@@ -56,7 +56,8 @@ export default function Specialties() {
           Áreas de atuação e expertise
         </p>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="flex justify-center">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl justify-items-center">
           {specialties.map(specialty => {
             const IconComponent = specialty.icon ? iconMap[specialty.icon] : Music;
             
@@ -79,6 +80,7 @@ export default function Specialties() {
               </div>
             );
           })}
+          </div>
         </div>
       </div>
     </section>

@@ -15,6 +15,10 @@ const config: Config = {
         brown: "#7EA69D",
         accent: "#7EA69D",
       },
+      fontFamily: {
+        lulo: ["Lulo Clean", "sans-serif"],
+        poppins: ["var(--font-poppins)", "sans-serif"],
+      },
     },
   },
   plugins: [],
