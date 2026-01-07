@@ -57,6 +57,7 @@ export default function AdminPage() {
     soundcloud: '',
     instagram: '',
     twitter: '',
+    whatsapp: '',
   });
 
   useEffect(() => {
@@ -100,6 +101,7 @@ export default function AdminPage() {
         soundcloud: data.soundcloud || '',
         instagram: data.instagram || '',
         twitter: data.twitter || '',
+        whatsapp: data.whatsapp || '',
       });
     } catch (err) {
       console.error('Error fetching content:', err);
@@ -132,6 +134,7 @@ export default function AdminPage() {
       saveContent('soundcloud', socialData.soundcloud),
       saveContent('instagram', socialData.instagram),
       saveContent('twitter', socialData.twitter),
+      saveContent('whatsapp', socialData.whatsapp),
     ]);
     alert('Redes sociais atualizadas!');
   };
@@ -243,7 +246,7 @@ export default function AdminPage() {
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
         {/* Tabs */}
         <div className="flex gap-4 mb-8 border-b border-accent/20">
           <button
@@ -529,6 +532,19 @@ export default function AdminPage() {
                   onChange={(e) => setSocialData({ ...socialData, twitter: e.target.value })}
                   className="w-full px-4 py-2 border border-accent/30 rounded-lg bg-secondary text-cream focus:outline-none focus:border-accent"
                   placeholder="https://x.com/..."
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-cream mb-2">
+                  WhatsApp
+                </label>
+                <input
+                  type="url"
+                  value={socialData.whatsapp}
+                  onChange={(e) => setSocialData({ ...socialData, whatsapp: e.target.value })}
+                  className="w-full px-4 py-2 border border-accent/30 rounded-lg bg-secondary text-cream focus:outline-none focus:border-accent"
+                  placeholder="https://wa.me/55XXXXXXXXXXX"
                 />
               </div>
 
